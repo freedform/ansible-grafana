@@ -1,0 +1,13 @@
+---
+- name: Validate variables for grafana state_control
+  ansible.builtin.assert:
+    that:
+      - grafana_state is defined
+      - grafana_state | length > 0
+    fail_msg: "grafana_state must be defined and non-empty"
+
+- name: Control Grafana daemon state
+  ansible.builtin.service:
+    name: grafana-server
+    state: "{{ grafana_state }}"
+    enabled: true

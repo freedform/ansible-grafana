@@ -1,41 +1,19 @@
-- name: Install dependencies
-  ansible.builtin.apt:
-    name:
-      - apt-transport-https
-      - software-properties-common
-    state: present
-    update_cache: true
+---
+- name: Set grafana_actions as list
+  ansible.builtin.set_fact:
+    grafana_actions_list: "{{ grafana_actions.split(',') }}"
 
-- name: Add Grafana GPG key
-  ansible.builtin.apt_key:
-    url: https://packages.grafana.com/gpg.key
-    state: present
+- name: Validate grafana_actions
+  ansible.builtin.assert:
+    that:
+      - grafana_actions is defined
+      - grafana_actions | length > 0
+      - grafana_actions_list | difference(grafana_supported_actions) | length == 0
+    fail_msg: "grafana_actions must be set to one or more of: {{ grafana_supported_actions | join(', ') }}"
 
-- name: Add Grafana repo
-  ansible.builtin.apt_repository:
-    repo: "deb https://packages.grafana.com/oss/deb stable main"
-    state: present
-
-- name: Install Grafana
-  ansible.builtin.apt:
-    name: "grafana={{ grafana_version }}"
-    state: present
-    update_cache: true
-
-- name: Configure admin credentials
-  ansible.builtin.lineinfile:
-    path: /etc/grafana/grafana.ini
-    regexp: '^;?admin_user'
-    line: "admin_user = {{ grafana_admin_user }}"
-
-- name: Configure admin password
-  ansible.builtin.lineinfile:
-    path: /etc/grafana/grafana.ini
-    regexp: '^;?admin_password'
-    line: "admin_password = {{ grafana_admin_password }}"
-
-- name: Restart grafana
-  ansible.builtin.service:
-    name: grafana-server
-    state: restarted
-    enabled: true
+- name: Run grafana action
+  ansible.builtin.include_tasks: "{{ grafana_action }}.yml"
+  loop: "{{ grafana_actions_list }}"
+  loop_control:
+    loop_var: grafana_action
+    label: "{{ grafana_action }}"

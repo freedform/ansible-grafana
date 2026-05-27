@@ -1,6 +1,6 @@
 galaxy_info:
   author: freedform
-  description: grafana role
+  description: Automates installation, configuration, and state management of Grafana
   min_ansible_version: "2.20"
   license: MIT
 

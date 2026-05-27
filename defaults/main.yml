@@ -1,5 +1,39 @@
-grafana_version: 12.4.2
+# @var grafana_actions:description: >
+# List of actions the role does, accepts one or more actions.
+# Use comma without spaces as a delimiter for multiple actions.
+# @var grafana_actions:required: `true`
+# @var grafana_actions:type: String
+# @var grafana_actions:example: >
+#   grafana_actions: install
+#   grafana_actions: install,configure,state_control
+# @end
 
+# @var grafana_version:description: Grafana version to be installed
+# @var grafana_version:required: `true`, only when action is install
+# @var grafana_version:type: String
+# @end
+grafana_version: 12.0.1
+
+# @var grafana_port:description: TCP port Grafana uses to serve the web interface
+# @var grafana_port:type: Integer
+# @end
 grafana_port: 3000
+
+# @var grafana_admin_user:description: Grafana admin username
+# @var grafana_admin_user:required: `true`, only when action is configure
+# @var grafana_admin_user:type: String
+# @end
 grafana_admin_user: admin
-grafana_admin_password: admin
+
+# @var grafana_admin_password:description: Grafana admin password
+# @var grafana_admin_password:required: `true`, only when action is configure
+# @var grafana_admin_password:type: String
+# @end
+
+# @var grafana_state:description: Target state for the Grafana daemon
+# @var grafana_state:required: `true`, only when action is state_control
+# @var grafana_state:type: String
+# @var grafana_state:example: >
+#   grafana_state: started
+#   grafana_state: restarted
+# @end
