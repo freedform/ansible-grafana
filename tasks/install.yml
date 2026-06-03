@@ -26,14 +26,14 @@
 - name: Download Grafana GPG key
   ansible.builtin.get_url:
     url: https://apt.grafana.com/gpg.key
-    dest: /etc/apt/keyrings/grafana.gpg
+    dest: /etc/apt/keyrings/grafana.asc
     owner: root
     group: root
     mode: '0644'
 
 - name: Add Grafana apt repository
   ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"
+    repo: "deb [signed-by=/etc/apt/keyrings/grafana.asc] https://apt.grafana.com stable main"
     state: present
     filename: grafana
 

@@ -1,13 +1,12 @@
 ---
 - name: Set grafana_actions as list
   ansible.builtin.set_fact:
-    grafana_actions_list: "{{ grafana_actions.split(',') }}"
+    grafana_actions_list: "{{ (grafana_actions | default('')).split(',') | reject('equalto', '') | list }}"
 
 - name: Validate grafana_actions
   ansible.builtin.assert:
     that:
-      - grafana_actions is defined
-      - grafana_actions | length > 0
+      - grafana_actions_list | length > 0
       - grafana_actions_list | difference(grafana_supported_actions) | length == 0
     fail_msg: "grafana_actions must be set to one or more of: {{ grafana_supported_actions | join(', ') }}"
 
